@@ -24,12 +24,12 @@ namespace GLTFast {
         public UnityEngine.Material GetPbrMetallicRoughnessMaterial(bool doubleSided=false) {
             if(doubleSided) {
                 if(pbrMetallicRoughnessDoubleSideShader==null) {
-                    pbrMetallicRoughnessDoubleSideShader = Shader.Find("glTF/PbrMetallicRoughnessDouble");
+                    pbrMetallicRoughnessDoubleSideShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrMetallicRoughnessDouble");
                 }
                 return new Material(pbrMetallicRoughnessDoubleSideShader);
             } else {
                 if(pbrMetallicRoughnessShader==null) {
-                    pbrMetallicRoughnessShader = Shader.Find("glTF/PbrMetallicRoughness");
+                    pbrMetallicRoughnessShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrMetallicRoughness");
                 }
                 return new Material(pbrMetallicRoughnessShader);
             }
@@ -38,12 +38,12 @@ namespace GLTFast {
         public UnityEngine.Material GetPbrSpecularGlossinessMaterial(bool doubleSided=false) {
             if(doubleSided) {
                 if(pbrSpecularGlossinessDoubleSideShader==null) {
-                    pbrSpecularGlossinessDoubleSideShader = Shader.Find("glTF/PbrSpecularGlossinessDouble");
+                    pbrSpecularGlossinessDoubleSideShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrSpecularGlossinessDouble");
                 }
                 return new Material(pbrSpecularGlossinessDoubleSideShader);
             } else {
                 if(pbrSpecularGlossinessShader==null) {
-                    pbrSpecularGlossinessShader = Shader.Find("glTF/PbrSpecularGlossiness");
+                    pbrSpecularGlossinessShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrSpecularGlossiness");
                 }
                 return new Material(pbrSpecularGlossinessShader);
             }
@@ -51,7 +51,7 @@ namespace GLTFast {
 
         public UnityEngine.Material GetUnlitMaterial(bool doubleSided=false) {
             if(unlitShader==null) {
-                unlitShader = Shader.Find("glTF/Unlit");
+                unlitShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/Unlit");
             }
             var mat = new Material(unlitShader);
             if(doubleSided) {
