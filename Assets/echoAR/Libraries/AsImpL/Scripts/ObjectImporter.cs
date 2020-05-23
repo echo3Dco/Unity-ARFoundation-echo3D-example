@@ -448,6 +448,8 @@ namespace AsImpL
             {
                 ImportingComplete();
             }
+            // Destroy this script on load complete
+            Destroy(this);
         }
 
         /// <summary>

@@ -97,6 +97,8 @@ namespace GLTFast
             if(onLoadComplete!=null) {
                 onLoadComplete(allFine, frame);
             }
+            // Destroy this script on load complete
+            Destroy(this);
         }
 
         protected virtual void LoadContentPrimary(DownloadHandler dlh) {
@@ -112,10 +114,11 @@ namespace GLTFast
 
         private void OnDestroy()
         {
-            if(gLTFastInstance!=null) {
-                gLTFastInstance.Destroy();
-                gLTFastInstance=null;
-            }
+            // Disable destruction of rendered object on script deletion
+            // if(gLTFastInstance!=null) {
+            //     gLTFastInstance.Destroy();
+            //     gLTFastInstance=null;
+            // }
         }
     }
 }
