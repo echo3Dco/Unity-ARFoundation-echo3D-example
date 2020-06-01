@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using SimpleJSON;
 using System.Globalization;
+using UnityEngine.Video;
 
 public class RemoteTransformations : MonoBehaviour
 {
@@ -114,5 +115,13 @@ public class RemoteTransformations : MonoBehaviour
         }
         this.gameObject.transform.localScale = initialScale * scaleFactor;
 
+        // Mute
+         bool mute = false;
+        if (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("mute", out value)) {
+            mute = value.Equals("true") ? true : false;
+        }
+        VideoPlayer videoPlayer = this.GetComponent<VideoPlayer>();
+        for (ushort i = 0; videoPlayer != null && i < videoPlayer.controlledAudioTrackCount; ++i)
+            videoPlayer.SetDirectAudioMute(i, mute);
     }
 }

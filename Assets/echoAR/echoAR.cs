@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using AsImpL;
 using Siccity.GLTFUtility;
 using System.Globalization;
+using UnityEngine.Video;
 
 public class echoAR : MonoBehaviour
 {
@@ -289,8 +290,10 @@ public class echoAR : MonoBehaviour
         //if (entry.getSupportedSDKs()[Entry.SDKs.UNITY.ordinal()])
         if (true)
         {
-            // Get model hologram
-            if (entry.getHologram().getType().Equals(Hologram.hologramType.MODEL_HOLOGRAM))
+            // Get hologram type
+            Hologram.hologramType hologramType = entry.getHologram().getType();
+            // Handle model hologram
+            if (hologramType.Equals(Hologram.hologramType.MODEL_HOLOGRAM))
             {
                 // Get model names and ID
                 ModelHologram modelHologram = (ModelHologram) entry.getHologram();
@@ -316,7 +319,51 @@ public class echoAR : MonoBehaviour
                     // Download model files and then instantiate
                     StartCoroutine(DownloadFiles(entry, serverURL, filenames, fileStorageIDs, importOptions));
                 }
+            // Handle video hologram
+            } else if (hologramType.Equals(Hologram.hologramType.VIDEO_HOLOGRAM)) {
+
+                // Get video
+                VideoHologram videoHologram = (VideoHologram) entry.getHologram();
+
+                // Create primitive plane for the video to appear on
+                GameObject videoPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+
+                // Set video plane position
+                videoPlane.transform.parent = this.gameObject.transform;
+                videoPlane.transform.position = this.gameObject.transform.position;
+
+                // Rotate the video plane
+                videoPlane.transform.Rotate(new Vector3(90, 180, 0)); // Right way up
+
+                // Set video plane size
+                string value = "";
+                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoHeight", out value)) ? float.Parse(value) * 0.01f: 1;
+                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoWidth", out value)) ? float.Parse(value) * 0.01f: 2;
+
+                // Scale video plane
+                videoPlane.transform.localScale = new Vector3(width, height, height);
+
+                // Attach VideoPlayer to video plane
+                var videoPlayer = videoPlane.AddComponent<VideoPlayer>();
+                videoPlayer.playOnAwake = false;                
+
+                // Attach a CustomBehaviour Component
+                videoPlane.AddComponent<CustomBehaviour>().entry = entry;
+
+                // Set gameobject name to video name
+                videoPlane.name = videoHologram.getFilename();
+
+                // Set video URL
+                videoPlayer.url = serverURL + "&file=" + videoHologram.getStorageID();
                 
+                // Play video
+                videoPlayer.Play();
+
+                // Mute
+                if (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("mute", out value) && value.Equals("true")) {
+                    for (ushort i = 0; i < videoPlayer.controlledAudioTrackCount; ++i)
+                        videoPlayer.SetDirectAudioMute(i, true);
+                }
             }
         }
     }
