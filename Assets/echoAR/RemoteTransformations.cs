@@ -35,7 +35,7 @@ public class RemoteTransformations : MonoBehaviour
         {
             // Set initial transfomation
             initialWorldSpacePosition = (this.gameObject.transform.parent) ? this.gameObject.transform.parent.transform.position : this.gameObject.transform.position;
-            initialWorldSpaceRotation = this.gameObject.transform.rotation * Quaternion.AngleAxis(90, transform.worldToLocalMatrix * Camera.main.transform.right) * Quaternion.AngleAxis(-180, transform.worldToLocalMatrix * Camera.main.transform.forward);
+            initialWorldSpaceRotation = this.gameObject.transform.rotation;
             initialScale = this.gameObject.transform.localScale;
         }
         catch (System.Exception e)
@@ -56,19 +56,6 @@ public class RemoteTransformations : MonoBehaviour
             positionFactor = this.gameObject.transform.parent.transform.localScale.magnitude;
         }
 
-        // Handle Interaction
-        if (entry.getAdditionalData().TryGetValue("direction", out value))
-        {
-            if (value.Equals("right"))
-                this.gameObject.transform.rotation *= Quaternion.AngleAxis(-Time.deltaTime * 150, transform.worldToLocalMatrix *
-                Camera.main.transform.up);
-            //this.transform.Rotate(this.transform.worldToLocalMatrix * Vector3.up, -Time.deltaTime * 150);
-            else
-                this.gameObject.transform.rotation *= Quaternion.AngleAxis(Time.deltaTime * 150, transform.worldToLocalMatrix *
-                Camera.main.transform.up);
-            //this.transform.Rotate(this.transform.worldToLocalMatrix * Vector3.up, Time.deltaTime * 150);
-        }
-
         // Handle translation
         Vector3 positionOffest = Vector3.zero;
         if (entry.getAdditionalData().TryGetValue("x", out value))
@@ -85,27 +72,39 @@ public class RemoteTransformations : MonoBehaviour
         }
         this.gameObject.transform.position = initialWorldSpacePosition + positionOffest * positionFactor;
 
+        // Handle spinning
+        float speed = 150;
+        if (entry.getAdditionalData().TryGetValue("speed", out value))
+        {
+            speed *= float.Parse(value, CultureInfo.InvariantCulture);
+        }
+        float offset = 0;
+        if (entry.getAdditionalData().TryGetValue("direction", out value))
+        {
+            if (value.Equals("right"))
+                offset += Time.time % 360 * speed;
+            else
+                offset -= Time.time % 360 * speed;
+        }
+
         // Handle rotation
         Quaternion targetQuaternion = initialWorldSpaceRotation;
+        float x = 0, y = 0, z = 0;
+        
         if (entry.getAdditionalData().TryGetValue("xAngle", out value))
         {
-            targetQuaternion *= Quaternion.AngleAxis(float.Parse(value, CultureInfo.InvariantCulture), transform.worldToLocalMatrix *
-                Camera.main.transform.right);
-            this.gameObject.transform.rotation = targetQuaternion;
+            x = float.Parse(value, CultureInfo.InvariantCulture);
 
         }
         if (entry.getAdditionalData().TryGetValue("yAngle", out value))
         {
-            targetQuaternion *= Quaternion.AngleAxis(float.Parse(value, CultureInfo.InvariantCulture), transform.worldToLocalMatrix *
-                Camera.main.transform.up);
-            this.gameObject.transform.rotation = targetQuaternion;
+            y = float.Parse(value, CultureInfo.InvariantCulture);
         }
         if (entry.getAdditionalData().TryGetValue("zAngle", out value))
         {
-            targetQuaternion *= Quaternion.AngleAxis(float.Parse(value, CultureInfo.InvariantCulture), transform.worldToLocalMatrix *
-                Camera.main.transform.forward);
-            this.gameObject.transform.rotation = targetQuaternion;
+            z = float.Parse(value, CultureInfo.InvariantCulture);
         }
+        this.gameObject.transform.rotation = Quaternion.Euler(x, y + offset, z);
 
         // Handle Scale
         float scaleFactor = 1f;

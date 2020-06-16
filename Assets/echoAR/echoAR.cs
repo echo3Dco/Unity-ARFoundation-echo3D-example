@@ -337,8 +337,8 @@ public class echoAR : MonoBehaviour
 
                 // Set video plane size
                 string value = "";
-                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoHeight", out value)) ? float.Parse(value) * 0.01f: 1;
-                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoWidth", out value)) ? float.Parse(value) * 0.01f: 2;
+                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoHeight", out value)) ? float.Parse(value) * 0.01f : 1;
+                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoWidth", out value)) ? float.Parse(value) * 0.01f : 2;
 
                 // Scale video plane
                 videoPlane.transform.localScale = new Vector3(width, height, height);
