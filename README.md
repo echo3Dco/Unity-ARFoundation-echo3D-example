@@ -9,6 +9,7 @@ Follow the instructions on our [doumention page](https://docs.echoar.xyz/unity/a
 
 ## Run
 * [Add the 3D model](https://docs.echoar.xyz/quickstart/add-a-3d-model) to the console.
+* [Set the API key](https://docs.echoar.xyz/unity/using-the-sdk) in the `echoAR.cs script` inside the `echoAR\echoAR.prefab` using the the Inspector.
 * [Build and run the AR application](https://docs.echoar.xyz/unity/adding-ar-capabilities#4-build-and-run-the-ar-application).
 
 ## Learn more
