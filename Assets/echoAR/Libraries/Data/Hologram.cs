@@ -10,7 +10,7 @@
 public class Hologram
 {
 
-    public enum hologramType { VIDEO_HOLOGRAM, ECHO_HOLOGRAM, MODEL_HOLOGRAM };
+    public enum hologramType { VIDEO_HOLOGRAM, ECHO_HOLOGRAM, MODEL_HOLOGRAM, IMAGE_HOLOGRAM };
 
     private string id;
     private hologramType type;

@@ -13,10 +13,15 @@ namespace Siccity.GLTFUtility {
 	/// <summary> API used for importing .gltf and .glb files </summary>
 	public static class Importer {
 
+		public static GameObject LoadFromFile(string filepath, string shader) {
+			GLTFAnimation.ImportResult[] animations;
+			GameObject ret = LoadFromFile(filepath, new ImportSettings(shader), out animations, Format.AUTO);
+			return ret;
+		}
+
 		public static GameObject LoadFromFile(string filepath, Format format = Format.AUTO) {
 			GLTFAnimation.ImportResult[] animations;
 			GameObject ret = LoadFromFile(filepath, new ImportSettings(), out animations, format);
-			// ret.AddComponent<CustomBehaviour>().entry = entry;
 			return ret;
 		}
 

@@ -27,6 +27,8 @@ namespace GLTFast {
             "KHR_texture_transform"
         };
 
+        public string shader;
+
         enum ChunkFormat : uint
         {
             JSON = 0x4e4f534a,
@@ -561,7 +563,7 @@ namespace GLTFast {
             if(gltfRoot.materials!=null) {
                 materials = new UnityEngine.Material[gltfRoot.materials.Length];
                 for(int i=0;i<materials.Length;i++) {
-                    materials[i] = materialGenerator.GenerateMaterial( gltfRoot.materials[i], gltfRoot.textures, images );
+                    materials[i] = materialGenerator.GenerateMaterial( gltfRoot.materials[i], gltfRoot.textures, images, shader );
                 }
             }
             Profiler.EndSample();

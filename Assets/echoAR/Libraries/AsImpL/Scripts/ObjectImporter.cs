@@ -365,6 +365,7 @@ namespace AsImpL
         public Entry entry;
         public string objName;
         public List<string> texNames;
+        public string shader;
 
         /// <summary>
         /// Request to load a file asynchronously.
@@ -374,11 +375,12 @@ namespace AsImpL
         /// <param name="texNames"></param>
         /// <param name="parentObj"></param>
         /// <param name="options"></param>
-        public void ImportModelAsync(Entry entry, string objName, string filePath, List<string> texNames, Transform parentObj, ImportOptions options)
+        public void ImportModelAsync(Entry entry, string objName, string filePath, List<string> texNames, Transform parentObj, ImportOptions options, string shader)
         {
             this.entry = entry;
             this.objName = objName;
             this.texNames = texNames;
+            this.shader = shader;
 
             if (loaderList == null)
             {
@@ -476,7 +478,7 @@ namespace AsImpL
         protected virtual void OnImported(GameObject obj, string absolutePath)
         {
             // Create Material
-            Material material = new Material(Shader.Find("Diffuse"));
+            Material material = (this.shader != null) ? new Material(Shader.Find(this.shader)) : new Material(Shader.Find("Diffuse"));
             // Create and Apply Texture
             int textureTypeIndex = 0;
             string[] textureTypes = { "_MainTex", "_BumpMap", "_LightMap", "_Cube" };

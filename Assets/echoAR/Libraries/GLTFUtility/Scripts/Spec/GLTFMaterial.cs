@@ -100,6 +100,8 @@ namespace Siccity.GLTFUtility {
 				// LWRP support
 				if (GraphicsSettings.renderPipelineAsset) sh = GraphicsSettings.renderPipelineAsset.defaultShader;
 #endif
+				if (shaderSettings.shader != null)
+					sh = Shader.Find(shaderSettings.shader);
 				if (sh == null) {
 					if (alphaMode == AlphaMode.BLEND) sh = shaderSettings.MetallicBlend;
 					else sh = shaderSettings.Metallic;
@@ -159,6 +161,8 @@ namespace Siccity.GLTFUtility {
 				// LWRP support
 				if (GraphicsSettings.renderPipelineAsset) sh = GraphicsSettings.renderPipelineAsset.defaultShader;
 #endif
+				if (shaderSettings.shader != null)
+					sh = Shader.Find(shaderSettings.shader);
 				if (sh == null) {
 					if (alphaMode == AlphaMode.BLEND) sh = shaderSettings.SpecularBlend;
 					else sh = shaderSettings.Specular;

@@ -10,6 +10,7 @@ namespace GLTFast
     {
         public string url;
         public GameObject frame;
+        public string shader;
 
         protected GLTFast gLTFastInstance;
         Coroutine loadRoutine;
@@ -52,6 +53,7 @@ namespace GLTFast
         protected virtual IEnumerator LoadContent( DownloadHandler dlh ) {
             deferAgent.Reset();
             gLTFastInstance = new GLTFast();
+            gLTFastInstance.shader = shader;
 
             bool allFine = true;
 

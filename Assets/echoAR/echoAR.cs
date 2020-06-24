@@ -185,6 +185,16 @@ public class echoAR : MonoBehaviour
         string hologramType = hologram["type"];
         switch (hologramType)
         {
+            case "IMAGE_HOLOGRAM":
+                ImageHologram imageHologramObject = new ImageHologram();
+                imageHologramObject.setFilename(hologram["filename"]);
+                imageHologramObject.setId(hologram["id"]);
+                imageHologramObject.setStorageID(hologram["storageID"]);
+                imageHologramObject.setTargetID(hologram["targetID"]);
+                imageHologramObject.setType(Hologram.hologramType.IMAGE_HOLOGRAM);
+                imageHologramObject.setTarget(targetObject);
+                hologramObject = imageHologramObject;
+                break;
             case "VIDEO_HOLOGRAM":
                 VideoHologram videoHologramObject = new VideoHologram();
                 videoHologramObject.setFilename(hologram["filename"]);
@@ -332,9 +342,6 @@ public class echoAR : MonoBehaviour
                 videoPlane.transform.parent = this.gameObject.transform;
                 videoPlane.transform.position = this.gameObject.transform.position;
 
-                // Rotate the video plane
-                videoPlane.transform.Rotate(new Vector3(90, 180, 0)); // Right way up
-
                 // Set video plane size
                 string value = "";
                 float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoHeight", out value)) ? float.Parse(value) * 0.01f : 1;
@@ -364,6 +371,37 @@ public class echoAR : MonoBehaviour
                     for (ushort i = 0; i < videoPlayer.controlledAudioTrackCount; ++i)
                         videoPlayer.SetDirectAudioMute(i, true);
                 }
+            // Handle image hologram
+            } else if (hologramType.Equals(Hologram.hologramType.IMAGE_HOLOGRAM)) {
+
+                // Get image
+                ImageHologram imageHologram = (ImageHologram) entry.getHologram();
+
+                // Create primitive plane for the image to appear on
+                GameObject imagePlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+
+                // Set image plane position
+                imagePlane.transform.parent = this.gameObject.transform;
+                imagePlane.transform.position = this.gameObject.transform.position;
+
+                // Set image plane size
+                string value = "";
+                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("imageHeight", out value)) ? float.Parse(value) * 0.01f : 1;
+                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("imageWidth", out value)) ? float.Parse(value) * 0.01f : 1;
+
+                // Scale image plane
+                imagePlane.transform.localScale = new Vector3(width, height, height);
+
+                // Set gameobject name to image name
+                imagePlane.name = imageHologram.getFilename();
+
+                // Set image URL
+                string imageURL = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("compressedImageStorageID", out value)) ? 
+                    serverURL + "&file=" + value :
+                    serverURL + "&file=" + imageHologram.getStorageID();
+
+                // Download image file and then instantiate
+                StartCoroutine(DownloadandInitiateImage(entry, imageURL, imagePlane));
             }
         }
     }
@@ -392,6 +430,27 @@ public class echoAR : MonoBehaviour
         importOptions.localEulerAngles = new Vector3(90 + xAngleFloat, 180 + yAngleFloat, 0 + zAngleFloat);
         // Return
         return importOptions;
+    }
+
+    IEnumerator DownloadandInitiateImage(Entry entry, string imageURL, GameObject imagePlane)
+    {
+        // Get texture
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageURL);
+        yield return www.SendWebRequest();
+        // Get renderer
+        MeshRenderer meshRenderer = imagePlane.GetComponent<MeshRenderer>();
+        if (www.isNetworkError || www.isHttpError) {
+            Debug.Log(www.error);
+            meshRenderer.material.color = Color.white;
+        } else {
+            // Set texture
+            Texture texture = ((DownloadHandlerTexture)www.downloadHandler).texture;            
+            // Set image as texture
+            meshRenderer.material.color = Color.white;
+            meshRenderer.material.mainTexture = texture;
+        }
+        // Attach a CustomBehaviour Component
+        imagePlane.AddComponent<CustomBehaviour>().entry = entry;
     }
 
     IEnumerator DownloadFiles(Entry entry, string serverURL, List<string> filenames, List<string> fileStorageIDs, ImportOptions importOptions)
@@ -454,6 +513,8 @@ public class echoAR : MonoBehaviour
         #endif
 
         // Import model
+        string shader = null; if (entry.getAdditionalData() != null) entry.getAdditionalData().TryGetValue("shader", out shader);
+        if (shader == null) shader = "Legacy Shaders/Diffuse"; // Force legacy shader for glb/glTf on Android
         string filepath = Application.persistentDataPath + "/" + filenames[0];
         string extension = Path.GetExtension(filepath).ToLower();
         // Load file by extension
@@ -461,6 +522,7 @@ public class echoAR : MonoBehaviour
             GameObject result = new GameObject();
             result.name = filenames[0];
             var glb = result.AddComponent<GLTFast.GlbAsset>();
+            glb.shader = shader;
             glb.url = serverURL + "&file=" + ((ModelHologram) entry.getHologram()).getStorageID();
             result.AddComponent<CustomBehaviour>().entry = entry;
             // Set game object parent and position
@@ -474,7 +536,7 @@ public class echoAR : MonoBehaviour
             #endif
         }
         else if (extension == ".gltf") {
-            GameObject result = Importer.LoadFromFile(filepath);
+            GameObject result = Importer.LoadFromFile(filepath, shader);
             result.name = filenames[0];
             result.AddComponent<CustomBehaviour>().entry = entry;
             // Set game object parent and position
@@ -488,7 +550,7 @@ public class echoAR : MonoBehaviour
             if (numFiles >= 3) {
                 texNames = filenames.GetRange(2, numFiles-2);
             }
-            gameObject.AddComponent<ObjectImporter>().ImportModelAsync(entry, Path.GetFileNameWithoutExtension(filenames[0]), filepath, texNames, null, importOptions);
+            gameObject.AddComponent<ObjectImporter>().ImportModelAsync(entry, Path.GetFileNameWithoutExtension(filenames[0]), filepath, texNames, null, importOptions, shader);
         }
         
         yield return null;

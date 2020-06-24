@@ -24,5 +24,13 @@ namespace Siccity.GLTFUtility {
 			specular = Specular;
 			specularBlend = SpecularBlend;
 		}
+
+		public string shader = null;
+		
+		public ShaderSettings() {}
+
+		public ShaderSettings(string shader) {
+			this.shader = shader;
+		}
 	}
 }

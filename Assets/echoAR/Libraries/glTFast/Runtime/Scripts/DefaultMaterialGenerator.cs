@@ -24,12 +24,12 @@ namespace GLTFast {
         public UnityEngine.Material GetPbrMetallicRoughnessMaterial(bool doubleSided=false) {
             if(doubleSided) {
                 if(pbrMetallicRoughnessDoubleSideShader==null) {
-                    pbrMetallicRoughnessDoubleSideShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrMetallicRoughnessDouble");
+                    pbrMetallicRoughnessDoubleSideShader = Shader.Find("glTF/PbrMetallicRoughnessDouble");
                 }
                 return new Material(pbrMetallicRoughnessDoubleSideShader);
             } else {
                 if(pbrMetallicRoughnessShader==null) {
-                    pbrMetallicRoughnessShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrMetallicRoughness");
+                    pbrMetallicRoughnessShader = Shader.Find("glTF/PbrMetallicRoughness");
                 }
                 return new Material(pbrMetallicRoughnessShader);
             }
@@ -38,12 +38,12 @@ namespace GLTFast {
         public UnityEngine.Material GetPbrSpecularGlossinessMaterial(bool doubleSided=false) {
             if(doubleSided) {
                 if(pbrSpecularGlossinessDoubleSideShader==null) {
-                    pbrSpecularGlossinessDoubleSideShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrSpecularGlossinessDouble");
+                    pbrSpecularGlossinessDoubleSideShader = Shader.Find("glTF/PbrSpecularGlossinessDouble");
                 }
                 return new Material(pbrSpecularGlossinessDoubleSideShader);
             } else {
                 if(pbrSpecularGlossinessShader==null) {
-                    pbrSpecularGlossinessShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/PbrSpecularGlossiness");
+                    pbrSpecularGlossinessShader = Shader.Find("glTF/PbrSpecularGlossiness");
                 }
                 return new Material(pbrSpecularGlossinessShader);
             }
@@ -51,7 +51,7 @@ namespace GLTFast {
 
         public UnityEngine.Material GetUnlitMaterial(bool doubleSided=false) {
             if(unlitShader==null) {
-                unlitShader = Shader.Find("Legacy Shaders/Diffuse"); // Shader.Find("glTF/Unlit");
+                unlitShader = Shader.Find("glTF/Unlit");
             }
             var mat = new Material(unlitShader);
             if(doubleSided) {
@@ -62,18 +62,35 @@ namespace GLTFast {
         }
 
         public UnityEngine.Material GenerateMaterial( Schema.Material gltfMaterial, Schema.Texture[] textures, Texture2D[] images ) {
+            return GenerateMaterial(gltfMaterial, textures, images, null);
+        }
+
+        public UnityEngine.Material GenerateMaterial( Schema.Material gltfMaterial, Schema.Texture[] textures, Texture2D[] images , string shader ) {
             UnityEngine.Material material;
-            
-            if (gltfMaterial.extensions!=null && gltfMaterial.extensions.KHR_materials_pbrSpecularGlossiness!=null) {
-                material = GetPbrSpecularGlossinessMaterial(gltfMaterial.doubleSided);
-            } else
-            if (gltfMaterial.extensions.KHR_materials_unlit!=null) {
-                material = GetUnlitMaterial(gltfMaterial.doubleSided);
+
+            // Check for user defined shader
+            if (shader != null) {
+                if (shader.Contains("glTF/PbrSpecularGlossiness"))
+                    material = GetPbrSpecularGlossinessMaterial(gltfMaterial.doubleSided);
+                else if (shader.Contains("glTF/PbrMetallicRoughness"))
+                    material = GetPbrMetallicRoughnessMaterial(gltfMaterial.doubleSided);
+                else if (shader.Contains("glTF/Unlit"))
+                    material = GetUnlitMaterial(gltfMaterial.doubleSided);
+                else
+                    material = new Material(Shader.Find(shader));
             } else {
-                // Disable Pbr Metallic Roughness Material by default (original setting)
-                // material = GetPbrMetallicRoughnessMaterial(gltfMaterial.doubleSided);
-                // Enable unlit Shader by default
-                material = GetUnlitMaterial(gltfMaterial.doubleSided);
+                // Original setting
+                if (gltfMaterial.extensions!=null && gltfMaterial.extensions.KHR_materials_pbrSpecularGlossiness!=null) {
+                    material = GetPbrSpecularGlossinessMaterial(gltfMaterial.doubleSided);
+                } else
+                if (gltfMaterial.extensions.KHR_materials_unlit!=null) {
+                    material = GetUnlitMaterial(gltfMaterial.doubleSided);
+                } else {
+                    // Enable Pbr Metallic Roughness Material by default (original setting)
+                    material = GetPbrMetallicRoughnessMaterial(gltfMaterial.doubleSided);
+                    // Disable unlit Shader by default
+                    // material = GetUnlitMaterial(gltfMaterial.doubleSided);
+                }
             }
 
             material.name = gltfMaterial.name;
