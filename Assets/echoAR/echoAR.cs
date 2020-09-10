@@ -33,7 +33,7 @@ public class echoAR : MonoBehaviour
         #if UNITY_EDITOR
             Debug.unityLogger.logEnabled = true;
         #else
-            Debug.logger.logEnabled = false;
+            Debug.unityLogger.logEnabled = false;
         #endif
         
         // The echoAR server details
@@ -42,7 +42,10 @@ public class echoAR : MonoBehaviour
         // Run the database query subroutine followed by assets download subroutine
         try
         {
+            // Query database for all the entires
             StartCoroutine(QueryDatabase(serverURL));
+            // What to query a single entry? Replace the above line with:
+            // StartCoroutine(QueryDatabase(serverURL + "&entry=<ENTRY_ID>"));
         }
         catch (System.Exception e)
         {
@@ -344,8 +347,8 @@ public class echoAR : MonoBehaviour
 
                 // Set video plane size
                 string value = "";
-                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoHeight", out value)) ? float.Parse(value) * 0.01f : 1;
-                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("videoWidth", out value)) ? float.Parse(value) * 0.01f : 2;
+                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("height", out value)) ? float.Parse(value) * 0.01f : 1;
+                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("width", out value)) ? float.Parse(value) * 0.01f : 2;
 
                 // Scale video plane
                 videoPlane.transform.localScale = new Vector3(width, height, height);
@@ -386,8 +389,8 @@ public class echoAR : MonoBehaviour
 
                 // Set image plane size
                 string value = "";
-                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("imageHeight", out value)) ? float.Parse(value) * 0.01f : 1;
-                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("imageWidth", out value)) ? float.Parse(value) * 0.01f : 1;
+                float height = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("height", out value)) ? float.Parse(value) * 0.01f : 1;
+                float width = (entry.getAdditionalData() != null && entry.getAdditionalData().TryGetValue("width", out value)) ? float.Parse(value) * 0.01f : 1;
 
                 // Scale image plane
                 imagePlane.transform.localScale = new Vector3(width, height, height);
@@ -512,9 +515,12 @@ public class echoAR : MonoBehaviour
                 if (Application.isEditor) UnityEditor.AssetDatabase.Refresh();
         #endif
 
+        // Set shader
+        string shader = null;
+        if (entry.getAdditionalData() != null) entry.getAdditionalData().TryGetValue("shader", out shader);
+        if (shader == null) shader = "Legacy Shaders/Diffuse"; // Force legacy shader for glb/glTf on mobile
+
         // Import model
-        string shader = null; if (entry.getAdditionalData() != null) entry.getAdditionalData().TryGetValue("shader", out shader);
-        if (shader == null) shader = "Legacy Shaders/Diffuse"; // Force legacy shader for glb/glTf on Android
         string filepath = Application.persistentDataPath + "/" + filenames[0];
         string extension = Path.GetExtension(filepath).ToLower();
         // Load file by extension
