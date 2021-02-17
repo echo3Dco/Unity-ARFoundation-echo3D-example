@@ -5,7 +5,7 @@ Example Unity project with AR Foundation and echoAR integrated.
 Don't have an API key? Make sure to register for FREE at [echoAR](https://console.echoar.xyz/#/auth/register).
 
 ## Setup
-Follow the instructions on our [doumention page](https://docs.echoar.xyz/unity/adding-ar-capabilities) to [set your API key](https://docs.echoar.xyz/unity/adding-ar-capabilities#3-set-you-api-key).
+Follow the instructions on our [documentation page](https://docs.echoar.xyz/unity/adding-ar-capabilities) to [set your API key](https://docs.echoar.xyz/unity/adding-ar-capabilities#3-set-you-api-key).
 
 ## Run
 * [Add the 3D model](https://docs.echoar.xyz/quickstart/add-a-3d-model) to the console.
