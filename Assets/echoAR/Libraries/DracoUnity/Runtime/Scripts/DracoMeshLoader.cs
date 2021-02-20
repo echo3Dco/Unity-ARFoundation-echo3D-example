@@ -27,7 +27,7 @@ using Unity.Jobs;
 
 public unsafe class DracoMeshLoader
 {
-	#if UNITY_EDITOR_OSX || UNITY_WEBGL || UNITY_IOS
+	#if UNITY_EDITOR_OSX || UNITY_WEBGL || UNITY_IOS || UNITY_WSA_10_0
         public const string DRACODEC_UNITY_LIB = "__Internal";
     #elif UNITY_ANDROID || UNITY_STANDALONE
         public const string DRACODEC_UNITY_LIB = "dracodec_unity";

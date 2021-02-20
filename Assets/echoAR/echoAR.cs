@@ -33,7 +33,7 @@ public class echoAR : MonoBehaviour
         #if UNITY_EDITOR
             Debug.unityLogger.logEnabled = true;
         #else
-            Debug.unityLogger.logEnabled = false;
+            Debug.logger.logEnabled = false;
         #endif
         
         // The echoAR server details
@@ -518,7 +518,6 @@ public class echoAR : MonoBehaviour
         // Set shader
         string shader = null;
         if (entry.getAdditionalData() != null) entry.getAdditionalData().TryGetValue("shader", out shader);
-        if (shader == null) shader = "Legacy Shaders/Diffuse"; // Force legacy shader for glb/glTf on mobile
 
         // Import model
         string filepath = Application.persistentDataPath + "/" + filenames[0];
