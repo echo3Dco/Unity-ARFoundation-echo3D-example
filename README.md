@@ -1,5 +1,6 @@
 # Unity-ARFoundation-echoAR-example
 Example Unity project with AR Foundation and echoAR integrated.
+
 Build in Unity version 2019.2 and tested on Unity versions 2020.1, 2019.4, 2018.4.
 
 ## Register
