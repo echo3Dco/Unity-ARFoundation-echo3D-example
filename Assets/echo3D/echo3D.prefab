@@ -43,4 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf1207ab2260994aa98cbfa9f61c3a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  APIKey: blue-water-4646
+  APIKey: <YOUR_API_KEY>
