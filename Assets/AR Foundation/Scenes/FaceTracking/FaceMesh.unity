@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1526980366}
-  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -637,12 +637,12 @@ PrefabInstance:
     - target: {fileID: 1493751086743120979, guid: e1d4d8772d02a5a47acd9aa621ae8c34,
         type: 3}
       propertyPath: m_Name
-      value: echoAR
+      value: echo3D
       objectReference: {fileID: 0}
     - target: {fileID: 2782816026810004250, guid: e1d4d8772d02a5a47acd9aa621ae8c34,
         type: 3}
       propertyPath: APIKey
-      value: blue-water-4646
+      value: <YOUR_API_KEY>
       objectReference: {fileID: 0}
     - target: {fileID: 6970338143313821952, guid: e1d4d8772d02a5a47acd9aa621ae8c34,
         type: 3}
