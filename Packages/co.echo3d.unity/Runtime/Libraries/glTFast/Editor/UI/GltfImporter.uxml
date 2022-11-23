@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="ImportSettings" class="section">
+        <Style src="GltfImporter-style.uss" />
+        <ui:Label text="glTF Import Settings" name="Headline" class="h1" />
+        <uie:EnumField label="Animation" value="Legacy" binding-path="importSettings.animationMethod" type="GLTFast.ImportSettings+AnimationMethod, glTFast" name="Animation" focusable="true" tooltip="Target animation system" />
+        <ui:Toggle label="Generate Lightmap UVs" name="SecondaryUVSet" binding-path="editorImportSettings.generateSecondaryUVSet" text="&#x9;" tooltip="Generate lightmap texture coordinates into the second UV channel (if not present)" />
+    </ui:VisualElement>
+    <ui:Foldout text="Advanced Settings" name="AdvancedSettings">
+        <Style src="GltfImporter-style.uss" />
+        <ui:IMGUIContainer name="ImportSettings" />
+    </ui:Foldout>
+    <ui:VisualElement name="Dependencies" class="dependencies section">
+        <Style src="GltfImporter-style.uss" />
+        <ui:VisualElement name="DepsHeader" style="flex-direction: row; align-items: center;">
+            <ui:VisualElement name="Icon" class="icon error" />
+            <ui:Label text="Some dependencies couldn&apos;t be resolved&#10;" style="-unity-font-style: bold;" />
+        </ui:VisualElement>
+        <ui:Foldout text="Show Corrupt Dependencies" value="false" name="DepsFoldout" class="deps-foldout" />
+        <ui:Button name="fixall" text="Fix All Errors" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Report" class="report section">
+        <Style src="GltfImporter-style.uss" />
+        <ui:Label text="Import Report" name="Headline" class="h1" />
+        <ui:ListView focusable="true" binding-path="reportItems" item-height="20" class="report-list" />
+    </ui:VisualElement>
+</ui:UXML>
