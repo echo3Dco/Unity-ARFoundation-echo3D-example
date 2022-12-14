@@ -1,0 +1,31 @@
+{
+  "name": "co.echo3d.echounitysdk",
+  "displayName": "echo3D Unity SDK",
+  "version": "1.0.0",
+  "unity": "2020.3",
+  "description": "The echo3D Unity SDK. By installing you confirm that you agree with our Terms of Use: https://www.echo3D.co/terms",
+  "author": {
+    "name": "echo3D",
+    "email": "info@echo3d.co",
+    "url": "https://www.echo3d.co/"
+  },
+  "keywords": [
+    "AR",
+    "unity",
+    "echo3D"
+  ],
+  "hideInEditor": false,
+  "dependencies": {
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.mathematics": "1.2.6",
+    "com.unity.burst": "1.6.6"
+  },
+  "samples": [
+    {
+      "displayName": "echo3D Demo Scene",
+      "description": "Sample scene setup to load various holograms from a public echo3D project.",
+      "path": "Samples~/echo3D_demo"
+    }
+  ]
+}
